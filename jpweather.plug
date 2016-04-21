@@ -1,0 +1,9 @@
+[Core]
+Name = JpWeather
+Module = jpweather
+
+[Python]
+Version = 2+
+
+[Documentation]
+Description = Report weather in Japan
