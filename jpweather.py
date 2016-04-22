@@ -14,10 +14,22 @@ class JpWeather(BotPlugin):
         result = self.find_weather_hack(args)
         return result
 
+    @botcmd
+    def jpweather_city(self, msg, args):
+        if args == '':
+            cities = self.fetch_cities()
+        else:
+            cities = self.fetch_cities_from_area(args)
+        return '\n'.join(['* {}'.format(city) for city in cities.keys()])
+
+    @botcmd
+    def jpweather_area(self, msg, args):
+        # area_name = args.split()[0]
+        areas = self.fetch_areas()
+        return '\n'.join(['* {}'.format(area) for area in areas])
+
     def find_city_id(self, city_name):
-        resp = requests.get(self.WEATHER_HACK_AREA_URL)
-        tree = ElementTree.fromstring(resp.content)
-        cities = {elm.attrib['title']: elm.attrib['id'] for elm in tree.findall('.//city')}
+        cities = self.fetch_cities()
         return cities.get(city_name, None)
 
     def find_weather_hack(self, city_name):
@@ -27,3 +39,18 @@ class JpWeather(BotPlugin):
         resp = requests.get(self.WEATHER_HACK_API_URL, {'city':city_id})
         wt_json = resp.json()
         return u'{}: {}は{}'.format(wt_json['title'], wt_json['forecasts'][0]['dateLabel'], wt_json['forecasts'][0]['telop'])
+
+    def fetch_cities(self):
+        resp = requests.get(self.WEATHER_HACK_AREA_URL)
+        tree = ElementTree.fromstring(resp.content)
+        return {elm.attrib['title']: elm.attrib['id'] for elm in tree.findall('.//city')}
+
+    def fetch_areas(self):
+        resp = requests.get(self.WEATHER_HACK_AREA_URL)
+        tree = ElementTree.fromstring(resp.content)
+        return [elm.attrib['title'] for elm in tree.findall('.//pref')]
+
+    def fetch_cities_from_area(self, area):
+        resp = requests.get(self.WEATHER_HACK_AREA_URL)
+        tree = ElementTree.fromstring(resp.content)
+        return {elm.attrib['title']: elm.attrib['id'] for elm in tree.findall('./pref[title="' + area + '"]/city')}
