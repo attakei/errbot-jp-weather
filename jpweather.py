@@ -1,5 +1,5 @@
 # -*- coding:utf8 -*-
-from __future__ import division, print_function, absolute_import
+from __future__ import print_function, absolute_import, unicode_literals
 from errbot import BotPlugin, botcmd
 import requests
 from xml.etree import ElementTree
@@ -20,13 +20,13 @@ class JpWeather(BotPlugin):
             cities = self.fetch_cities()
         else:
             cities = self.fetch_cities_from_area(args)
-        return '\n'.join(['* {}'.format(city) for city in cities.keys()])
+        return u'\n'.join(['* {}'.format(city) for city in cities.keys()])
 
     @botcmd
     def jpweather_area(self, msg, args):
         # area_name = args.split()[0]
         areas = self.fetch_areas()
-        return '\n'.join(['* {}'.format(area) for area in areas])
+        return u'\n'.join(['* {}'.format(area) for area in areas])
 
     def find_city_id(self, city_name):
         cities = self.fetch_cities()
