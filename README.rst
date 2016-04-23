@@ -13,10 +13,16 @@ Usage
 
 .. code-block:: bash
 
-   > !weather
+   > !jpweather_area
    ...
-   東京
+   東京都
    ...
-   
-   > !weather 東京
+
+   > !jpweather_city 東京都
+   (not working...)
+   ...
+   !jpweather_city 東京都
+   ...
+
+   > !jpweather 東京
    東京の天気: 今日は雨
