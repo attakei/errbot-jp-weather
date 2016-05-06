@@ -3,11 +3,31 @@ from __future__ import print_function, absolute_import, unicode_literals
 from errbot import BotPlugin, botcmd
 import requests
 from xml.etree import ElementTree
+from bs4 import BeautifulSoup
 
 
 class JpWeather(BotPlugin):
     WEATHER_HACK_AREA_URL = 'http://weather.livedoor.com/forecast/rss/primary_area.xml'
     WEATHER_HACK_API_URL = 'http://weather.livedoor.com/forecast/webservice/json/v1?'
+
+    def activate(self):
+        super(JpWeather, self).activate()
+        # TODO: port to method
+        cities = {}
+        areas = []
+        resp = requests.get(self.WEATHER_HACK_AREA_URL)
+        soup = BeautifulSoup(resp.content)
+        for city_elm in soup.find_all('city'):
+            city = {
+                'id': city_elm.attrs['id'],
+                'name': city_elm.attrs['title'],
+                'area': city_elm.parent.attrs['title'],
+            }
+            cities[city['name']] = city
+            if city['area'] not in areas:
+                areas.append(city['area'])
+        self['cities'] = cities
+        self['areas'] = areas
 
     @botcmd
     def jpweather(self, msg, args):
