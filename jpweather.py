@@ -11,11 +11,15 @@ class JpWeather(BotPlugin):
 
     @botcmd
     def jpweather(self, msg, args):
+        """Say weather on specified city of Japan
+        """
         result = self.find_weather_hack(args)
         return result
 
     @botcmd
     def jpweather_city(self, msg, args):
+        """Say list of cities abled to report weather
+        """
         if args == '':
             cities = self.fetch_cities()
         else:
