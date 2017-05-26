@@ -53,7 +53,7 @@ class JpWeather(BotPlugin):
 
     def find_weather_hack(self, city_name):
         city = self['cities'].get(city_name, None)
-        if city_name is None:
+        if city is None:
             return u'{} は確認不可能な地域です'.format(city_name)
         resp = requests.get(self.WEATHER_HACK_API_URL, {'city': city['id']})
         wt_json = resp.json()
